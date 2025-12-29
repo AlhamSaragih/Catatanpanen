@@ -341,6 +341,52 @@
       e.target.value = val;
     });
 
+      // Custom Tab Navigation (vertikal)
+  tbody.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab' && e.target.classList.contains('w')) {
+      e.preventDefault();
+      
+      const currentInput = e.target;
+      const currentRow = parseInt(currentInput.closest('tr').querySelector('td:first-child').textContent) - 1;
+      const currentCol = parseInt(currentInput.dataset.col);
+      
+      let nextRow, nextCol;
+      
+      if (e.shiftKey) {
+        // Shift+Tab: ke atas
+        nextRow = currentRow - 1;
+        nextCol = currentCol;
+        
+        if (nextRow < 0) {
+          nextRow = ROWS - 1;
+          nextCol = currentCol - 1;
+        }
+        
+        if (nextCol < 0) return; // jangan keluar dari tabel
+      } else {
+        // Tab: ke bawah
+        nextRow = currentRow + 1;
+        nextCol = currentCol;
+        
+        if (nextRow >= ROWS) {
+          nextRow = 0;
+          nextCol = currentCol + 1;
+        }
+        
+        if (nextCol >= COLS) return; // jangan keluar dari tabel
+      }
+      
+      // Fokus ke input berikutnya
+      const nextTr = tbody.querySelectorAll('tr')[nextRow];
+      const nextInput = nextTr.querySelectorAll('input.w')[nextCol];
+      if (nextInput) {
+        nextInput.focus();
+        nextInput.select(); // otomatis select semua text
+      }
+    }
+  });
+
+
     function hitung() {
       const inputs = document.querySelectorAll('#tbl input.w');
 
